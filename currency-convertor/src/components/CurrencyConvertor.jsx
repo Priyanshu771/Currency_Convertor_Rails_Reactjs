@@ -70,27 +70,67 @@ const CurrencyConverter = () => {
   };
 
   return (
-    <div>
-      <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} />
-      <select value={fromCurrency} onChange={(e) => setFromCurrency(e.target.value)}>
-        <option value="">Select currency</option>
-        {currencyList.map((currency) => (
-          <option value={currency.currency} key={currency.currency}>
-            {currency.currency}
-          </option>
-        ))}
-      </select>
-      <select value={toCurrency} onChange={(e) => setToCurrency(e.target.value)}>
-        <option value="">Select currency</option>
-        {currencyList.map((currency) => (
-          <option value={currency.currency} key={currency.currency}>
-            {currency.currency}
-          </option>
-        ))}
-      </select>
-      <button onClick={handleConvert}>Convert</button>
-      <button onClick={handleDownload}>Download</button>
-      <div>Converted Amount: {convertedAmount}</div>
+    <div className="container">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <h2 className="text-center">Currency Converter</h2>
+          <div className="form-group">
+            <label htmlFor="amount">Amount</label>
+            <input
+              type="number"
+              id="amount"
+              className="form-control"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="fromCurrency">From Currency</label>
+            <select
+              id="fromCurrency"
+              className="form-control"
+              value={fromCurrency}
+              onChange={(e) => setFromCurrency(e.target.value)}
+            >
+              <option value="">Select currency</option>
+              {currencyList.map((currency) => (
+                <option value={currency.currency} key={currency.currency}>
+                  {currency.currency}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="form-group">
+            <label htmlFor="toCurrency">To Currency</label>
+            <select
+              id="toCurrency"
+              className="form-control"
+              value={toCurrency}
+              onChange={(e) => setToCurrency(e.target.value)}
+            >
+              <option value="">Select currency</option>
+              {currencyList.map((currency) => (
+                <option value={currency.currency} key={currency.currency}>
+                  {currency.currency}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="text-center">
+            <button className="btn btn-primary" onClick={handleConvert}>
+              Convert
+            </button>
+            <button className="btn btn-primary" onClick={handleDownload}>
+              Download
+            </button>
+          </div>
+          {convertedAmount && (
+            <div className="text-center mt-3">
+              Converted Amount: {convertedAmount}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
