@@ -19,7 +19,11 @@ const CurrencyConverter = () => {
       const response = await axios.get('https://api.exchangerate-api.com/v4/latest/USD');
       const data = response.data;
       const currencies = Object.keys(data.rates);
-      setCurrencyList(currencies);
+      const currencyData = currencies.map((currency) => ({
+        currency,
+        rate: data.rates[currency],
+      }));
+      setCurrencyList(currencyData);
     } catch (error) {
       console.error('Error:', error);
     }
@@ -42,52 +46,45 @@ const CurrencyConverter = () => {
     }
   };
 
-  const handleDownload = async () => {
+  const handleDownload = () => {
     if (currencyList.length === 0) {
       console.error('Currency list not available');
       return;
     }
-  
-    try {
-      const response = await axios.get('/api/v1/currency_converter/data', {
-        responseType: 'blob', // Set the response type to 'blob'
-      });
-  
-      const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'data.xlsx';
-      link.click();
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Error:', error);
-    }
+
+    const sheetData = currencyList.map((currency) => ({
+      'Currency': currency.currency,
+      'Rate': currency.rate,
+    }));
+
+    const sheet = XLSX.utils.json_to_sheet(sheetData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, sheet, 'Currency List');
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    saveAsExcelFile(excelBuffer, 'currency_list.xlsx');
   };
-  
-  
-  
+
   const saveAsExcelFile = (buffer, fileName) => {
     const blob = new Blob([buffer], { type: 'application/octet-stream' });
     saveAs(blob, fileName);
   };
-  
+
   return (
     <div>
       <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} />
       <select value={fromCurrency} onChange={(e) => setFromCurrency(e.target.value)}>
         <option value="">Select currency</option>
         {currencyList.map((currency) => (
-          <option value={currency} key={currency}>
-            {currency}
+          <option value={currency.currency} key={currency.currency}>
+            {currency.currency}
           </option>
         ))}
       </select>
       <select value={toCurrency} onChange={(e) => setToCurrency(e.target.value)}>
         <option value="">Select currency</option>
         {currencyList.map((currency) => (
-          <option value={currency} key={currency}>
-            {currency}
+          <option value={currency.currency} key={currency.currency}>
+            {currency.currency}
           </option>
         ))}
       </select>
