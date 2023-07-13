@@ -1,7 +1,6 @@
 require 'httparty'
 
 class Api::V1::CurrencyConvertorController < ApplicationController
-
   def convert
     begin
       amount = params[:amount].to_f
@@ -17,22 +16,29 @@ class Api::V1::CurrencyConvertorController < ApplicationController
     end
   end
 
-  def data
+  def save_data
     # Logic to fetch the data for Excel export
     # Generate the data in the desired format (e.g., array of hashes)
-    data = [
+    fetched_data = [
       { column1: 'Value 1', column2: 'Value 2', column3: 'Value 3' },
       { column1: 'Value 4', column2: 'Value 5', column3: 'Value 6' },
       # Add more data rows as needed
     ]
   
-    respond_to do |format|
-      format.json { render json: data }
-      format.xlsx {
-        response.headers['Content-Disposition'] = 'attachment; filename="data.xlsx"'
-        render xlsx: 'data', xlsx_created_at: Time.now
-      }
+    # Save fetched_data into the database
+    saved_data = []
+  
+    fetched_data.each do |row|
+      excel = Excel.new(row)
+      if excel.save
+        saved_data << excel
+      else
+        render json: { error: excel.errors.full_messages }, status: :unprocessable_entity
+        return
+      end
     end
+  
+    render json: saved_data, status: :ok
   end
   
   

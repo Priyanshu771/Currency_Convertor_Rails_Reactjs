@@ -8,6 +8,7 @@ gem "rails", "~> 7.0.6"
 
 
 gem 'rack-cors', :require => 'rack/cors'
+gem 'roo'
 
 gem 'httparty' 
 gem 'responders'

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import './CurrencyConverter.css';
 
 const CurrencyConverter = () => {
   const [amount, setAmount] = useState('');
@@ -46,6 +47,15 @@ const CurrencyConverter = () => {
     }
   };
 
+  const handleSaveData = async () => {
+    try {
+      await axios.post('/api/v1/currency_converter/save_data');
+      console.log('Data saved successfully');
+    } catch (error) {
+      console.error('Error saving data:', error);
+    }
+  };
+
   const handleDownload = () => {
     if (currencyList.length === 0) {
       console.error('Currency list not available');
@@ -53,8 +63,8 @@ const CurrencyConverter = () => {
     }
 
     const sheetData = currencyList.map((currency) => ({
-      'Currency': currency.currency,
-      'Rate': currency.rate,
+      Currency: currency.currency,
+      Rate: currency.rate,
     }));
 
     const sheet = XLSX.utils.json_to_sheet(sheetData);
@@ -70,10 +80,10 @@ const CurrencyConverter = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container mt-5 convertor">
       <div className="row justify-content-center">
-        <div className="col-md-6">
-          <h2 className="text-center">Currency Converter</h2>
+        <div className="col-md-8">
+          <h2 className="text-center mb-4">Currency Converter</h2>
           <div className="form-group">
             <label htmlFor="amount">Amount</label>
             <input
@@ -84,6 +94,7 @@ const CurrencyConverter = () => {
               onChange={(e) => setAmount(e.target.value)}
             />
           </div>
+          <br />
           <div className="form-group">
             <label htmlFor="fromCurrency">From Currency</label>
             <select
@@ -100,6 +111,7 @@ const CurrencyConverter = () => {
               ))}
             </select>
           </div>
+          <br />
           <div className="form-group">
             <label htmlFor="toCurrency">To Currency</label>
             <select
@@ -116,14 +128,19 @@ const CurrencyConverter = () => {
               ))}
             </select>
           </div>
-          <div className="text-center">
-            <button className="btn btn-primary" onClick={handleConvert}>
+          <br />
+          <div className="text-center buttons">
+            <button className="btn btn-primary mr-2" onClick={handleConvert}>
               Convert
+            </button>
+            <button className="btn btn-primary mr-2" onClick={handleSaveData}>
+              Save Data
             </button>
             <button className="btn btn-primary" onClick={handleDownload}>
               Download
             </button>
           </div>
+          <br />
           {convertedAmount && (
             <div className="text-center mt-3">
               Converted Amount: {convertedAmount}
