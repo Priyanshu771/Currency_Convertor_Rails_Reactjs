@@ -1,4 +1,6 @@
 require 'httparty'
+require 'json'
+
 
 class Api::V1::CurrencyConvertorController < ApplicationController
   def convert
@@ -17,31 +19,35 @@ class Api::V1::CurrencyConvertorController < ApplicationController
   end
 
   def save_data
-    # Logic to fetch the data for Excel export
-    # Generate the data in the desired format (e.g., array of hashes)
-    fetched_data = [
-      { column1: 'Value 1', column2: 'Value 2', column3: 'Value 3' },
-      { column1: 'Value 4', column2: 'Value 5', column3: 'Value 6' },
-      # Add more data rows as needed
-    ]
+    begin
+      # Logic to fetch the data from the API
+      response = HTTParty.get('https://api.exchangerate-api.com/v4/latest/USD')
+      data = JSON.parse(response.body)
   
-    # Save fetched_data into the database
-    saved_data = []
+      # Save fetched data into the database
+      saved_data = []
   
-    fetched_data.each do |row|
-      excel = Excel.new(row)
-      if excel.save
-        saved_data << excel
-      else
-        render json: { error: excel.errors.full_messages }, status: :unprocessable_entity
-        return
+      data['rates'].each do |currency_name, currency_rate|
+        currency = Currency.new(currency_name: currency_name, currency_rate: currency_rate)
+        if currency.save
+          saved_data << currency
+        else
+          render json: { error: currency.errors.full_messages }, status: :unprocessable_entity
+          return
+        end
       end
-    end
   
-    render json: saved_data, status: :ok
+      render json: saved_data, status: :ok
+    rescue => e
+      render json: { error: e.message }, status: :internal_server_error
+    end
   end
   
   
+  def fetch_data
+    @currency = Currency.all
+    render json: @currency
+  end
 
   private
 

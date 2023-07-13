@@ -10,6 +10,7 @@ const CurrencyConverter = () => {
   const [toCurrency, setToCurrency] = useState('');
   const [convertedAmount, setConvertedAmount] = useState('');
   const [currencyList, setCurrencyList] = useState([]);
+  const [fetchedData, setFetchedData] = useState([]);
 
   useEffect(() => {
     fetchCurrencyList();
@@ -51,6 +52,12 @@ const CurrencyConverter = () => {
     try {
       await axios.post('/api/v1/currency_converter/save_data');
       console.log('Data saved successfully');
+
+      // Fetch the data from the database after saving
+      const response = await fetch('/api/v1/currency_converter/fetch_data');
+      const data = await response.json();
+      setFetchedData(data);
+      console.log('Fetched data:', data);
     } catch (error) {
       console.error('Error saving data:', error);
     }
@@ -146,6 +153,18 @@ const CurrencyConverter = () => {
               Converted Amount: {convertedAmount}
             </div>
           )}
+          {/* {fetchedData.length > 0 && (
+            <div className="mt-5">
+              <h4>Fetched Data:</h4>
+              <ul>
+                {fetchedData.map((data, index) => (
+                  <li key={index}>
+                    Column 1: {data.column1}, Column 2: {data.column2}, Column 3: {data.column3}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )} */}
         </div>
       </div>
     </div>
