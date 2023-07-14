@@ -24,6 +24,9 @@ class Api::V1::CurrencyConvertorController < ApplicationController
       response = HTTParty.get('https://api.exchangerate-api.com/v4/latest/USD')
       data = JSON.parse(response.body)
   
+      # Clear existing data in the table
+      Currency.destroy_all
+  
       # Save fetched data into the database
       saved_data = []
   
@@ -42,6 +45,8 @@ class Api::V1::CurrencyConvertorController < ApplicationController
       render json: { error: e.message }, status: :internal_server_error
     end
   end
+  
+  
   
   
   def fetch_data
