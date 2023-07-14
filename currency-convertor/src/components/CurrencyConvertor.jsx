@@ -90,7 +90,17 @@ const CurrencyConverter = () => {
     <div className="container mt-5 convertor">
       <div className="row justify-content-center">
         <div className="col-md-8">
-          <h2 className="text-center mb-4">Currency Converter</h2>
+          <h2 className="text-center mb-4">
+          <img
+              src="https://img.freepik.com/free-vector/digital-money-indian-rupee-futuristic-circuit-technology-background_1017-41096.jpg?w=740&t=st=1689317951~exp=1689318551~hmac=af3ff0c6c418735ba667f71e5532a735b8be6a27f180b2e1360933fbd6186eb1"
+              className="currency-logo"
+              width={100}
+              
+            />Currency Converter</h2>
+
+          <div>
+            
+          </div>
           <div className="form-group">
             <label htmlFor="amount">Amount</label>
             <input

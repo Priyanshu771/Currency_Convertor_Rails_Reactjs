@@ -20,14 +20,14 @@ class Api::V1::CurrencyConvertorController < ApplicationController
 
   def save_data
     begin
-      # Logic to fetch the data from the API
+    
       response = HTTParty.get('https://api.exchangerate-api.com/v4/latest/USD')
       data = JSON.parse(response.body)
   
-      # Clear existing data in the table
+      
       Currency.destroy_all
   
-      # Save fetched data into the database
+    
       saved_data = []
   
       data['rates'].each do |currency_name, currency_rate|
