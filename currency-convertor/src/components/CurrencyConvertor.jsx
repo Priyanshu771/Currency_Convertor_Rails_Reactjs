@@ -137,14 +137,14 @@ const CurrencyConverter = () => {
           </div>
           <br />
           <div className="text-center buttons">
-            <button className="btn btn-primary mr-2" onClick={handleConvert}>
-              Convert
+            <button className="btn btn-primary mr-2 m-3" onClick={handleConvert}>
+              <i className="fas fa-exchange-alt"></i> Convert
             </button>
-            <button className="btn btn-primary mr-2" onClick={handleSaveData}>
-              Save Data
+            <button className="btn btn-primary mr-2 m-3" onClick={handleSaveData}>
+              <i className="fas fa-save"></i> Save Data
             </button>
-            <button className="btn btn-primary" onClick={handleDownload}>
-              Download
+            <button className="btn btn-primary m-3" onClick={handleDownload}>
+              <i className="fas fa-download"></i> Download
             </button>
           </div>
           <br />
@@ -153,18 +153,6 @@ const CurrencyConverter = () => {
               Converted Amount: {convertedAmount}
             </div>
           )}
-          {/* {fetchedData.length > 0 && (
-            <div className="mt-5">
-              <h4>Fetched Data:</h4>
-              <ul>
-                {fetchedData.map((data, index) => (
-                  <li key={index}>
-                    Column 1: {data.column1}, Column 2: {data.column2}, Column 3: {data.column3}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )} */}
         </div>
       </div>
     </div>
