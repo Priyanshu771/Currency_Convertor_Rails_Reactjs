@@ -20,31 +20,27 @@ class Api::V1::CurrencyConvertorController < ApplicationController
 
   def save_data
     begin
-    
       response = HTTParty.get('https://api.exchangerate-api.com/v4/latest/USD')
       data = JSON.parse(response.body)
-  
       
-      Currency.destroy_all
-  
-    
-      saved_data = []
-  
       data['rates'].each do |currency_name, currency_rate|
-        currency = Currency.new(currency_name: currency_name, currency_rate: currency_rate)
+        currency = Currency.find_or_initialize_by(currency_name: currency_name)
+        currency.currency_rate = currency_rate
+        
         if currency.save
-          saved_data << currency
+          # Currency record updated
         else
           render json: { error: currency.errors.full_messages }, status: :unprocessable_entity
           return
         end
       end
   
-      render json: saved_data, status: :ok
+      render json: { message: "Data updated successfully" }, status: :ok
     rescue => e
       render json: { error: e.message }, status: :internal_server_error
     end
   end
+  
   
   
   

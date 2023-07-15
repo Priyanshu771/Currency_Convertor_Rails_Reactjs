@@ -148,10 +148,10 @@ const CurrencyConverter = () => {
           <br />
           <div className="text-center buttons">
             <button className="btn btn-primary mr-2 m-3" onClick={handleConvert}>
-              <i className="fas fa-exchange-alt"></i> Convert
+              <i className="fas fa-exchange-alt"></i> Exchange
             </button>
             <button className="btn btn-primary mr-2 m-3" onClick={handleSaveData}>
-              <i className="fas fa-save"></i> Save Data
+              <i className="fas fa-save"></i> Upload
             </button>
             <button className="btn btn-primary m-3" onClick={handleDownload}>
               <i className="fas fa-download"></i> Download
